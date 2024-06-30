@@ -1,23 +1,27 @@
 body {
     font-family: 'Courier New', monospace;
+    margin: 0px;
 }
 
 #container {
     background-color: darkgray;
     display: flex;
     flex-direction: column;
-    width: 250px;
+    width: 750px;
+    border: 10px solid black;
 }
 
 #display {
     box-sizing: border-box;
     background-color: rgb(28, 172, 172);
-    padding: 10px;
-    height: 50px;
-    width: 250px;
+    padding-right: 15px;
+    height: 130px;
+    width: 750px;
     flex-shrink: 0;
     text-align: right;
-    font-size: 30px;
+    align-content: end;
+    font-size: 92px;
+    border-bottom: 10px solid black;
 }
 
 #interface {
@@ -31,10 +35,10 @@ body {
 
 .row > * {
     box-sizing: border-box;
-    height: 50px;
-    width: 50px;
+    height: 150px;
+    width: 150px;
     padding: 0px;
-    font-size: 24px;
+    font-size: 72px;
     text-align: center;
 }
 

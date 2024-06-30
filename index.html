@@ -9,35 +9,35 @@
 </head>
 <body>
     <div id="container">
-        <div id="display">0.12345</div>
+        <div id="display"></div>
         <div id="interface">
             <div class="row">
-                <button>7</button>
-                <button>8</button>
-                <button>9</button>
-                <button>/</button>
-                <button>DEL</button>
+                <button class="numbers">7</button>
+                <button class="numbers">8</button>
+                <button class="numbers">9</button>
+                <button class="operators">/</button>
+                <button id="del">DEL</button>
             </div>
             <div class="row">
-                <button>4</button>
-                <button>5</button>
-                <button>6</button>
-                <button>*</button>
+                <button class="numbers">4</button>
+                <button class="numbers">5</button>
+                <button class="numbers">6</button>
+                <button class="operators">*</button>
+                <div class="placeholders"></div>
+            </div>
+            <div class="row">
+                <button class="numbers">1</button>
+                <button class="numbers">2</button>
+                <button class="numbers">3</button>
+                <button class="operators">-</button>
                 <div class="placeholder"></div>
             </div>
             <div class="row">
-                <button>1</button>
-                <button>2</button>
-                <button>3</button>
-                <button>-</button>
+                <button id="decimalpoint">.</button>
+                <button class="numbers" id="zero">0</button>
                 <div class="placeholder"></div>
-            </div>
-            <div class="row">
-                <button>.</button>
-                <button>0</button>
-                <div class="placeholder"></div>
-                <button>+</button>
-                <button>=</button>
+                <button class="operators">+</button>
+                <button id="equalsign">=</button>
             </div>
         </div>
     </div>
