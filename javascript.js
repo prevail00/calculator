@@ -18,7 +18,6 @@ equal.addEventListener("click", () => {
     if (secondNum === undefined && display.textContent === "") {
         return;
     }
-    secondNum = display.textContent;
     operate(operator, firstNum, secondNum);  
     firstNum = undefined;
     secondNum = undefined;
@@ -45,7 +44,7 @@ function operate(operator, firstNum, secondNum) {
         display.textContent = "Too big";
         return;
     }
-    display.textContent = result;
+    updateDisplay(firstNum, secondNum, operator,result);
 }
 
 
@@ -90,7 +89,20 @@ numbers.forEach((button) => {
         if (display.textContent.length >= maxNumLen) {
             return;
         }
+
+        if (firstNum !== undefined) {
+           if (secondNum === undefined) {
+            secondNum = "";
+            secondNum += button.textContent;
+           }
+           else {
+            secondNum += button.textContent;
+           }
+           updateDisplay(firstNum, secondNum, operator,result);
+           return;
+        }
         display.textContent += button.textContent;
+        
     });
   });
 
@@ -99,17 +111,34 @@ const operators = document.querySelectorAll(".operators");
 operators.forEach((button) => {
     // and for each one we add a 'click' listener
     button.addEventListener("click", () => {
+        if (result !== undefined) {
+            firstNum = result;
+            result = undefined;
+        }
         if (display.textContent === "") {
             if (firstNum === undefined) {
                 alert("Enter the first number");
                 return;
             }
             operator = button.textContent;
-            return;        
+            return;    
         }
-        firstNum = display.textContent;
+        if (firstNum === undefined) {
+            firstNum = display.textContent;
+        }
         operator = button.textContent;
-        display.textContent = "";
+        updateDisplay(firstNum, secondNum, operator,result);
     });
   });
 
+  function updateDisplay(firstNum, secondNum, operator, result) {
+    if (operator !== undefined) {
+        display.textContent = `${firstNum}${operator}`;
+    }
+    if (secondNum !== undefined) {
+        display.textContent = `${firstNum}${operator}${secondNum}`;
+    }
+    if (result !== undefined) {
+        display.textContent = `${firstNum}${operator}${secondNum}=${result}`;
+    }
+  }
