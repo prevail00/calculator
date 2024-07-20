@@ -1,7 +1,7 @@
-let operator;
-let firstNum;
-let secondNum;
-let result;
+let operator = "";
+let firstNum = "";
+let secondNum = "";
+let result = "";
 const maxNumLen = 13;
 
 const display = document.querySelector("#display");
@@ -15,13 +15,16 @@ del.addEventListener("click", () => {
 const equal = document.querySelector("#equalsign");
 
 equal.addEventListener("click", () => {
-    if (secondNum === undefined && display.textContent === "") {
+    if (secondNum === "" && display.textContent === "") {
+        alert("Enter the second number");
         return;
     }
+    secondNum = display.textContent;
     operate(operator, firstNum, secondNum);  
-    firstNum = undefined;
-    secondNum = undefined;
-    operator = undefined;
+    firstNum = result;
+    result = "";
+    secondNum = "";
+    operator = "";
 });
 
 function operate(operator, firstNum, secondNum) {
@@ -40,11 +43,33 @@ function operate(operator, firstNum, secondNum) {
     else {
         return;
     }
-    if (result.toString().length >= maxNumLen) {
-        display.textContent = "Too big";
+    //Get the length of the rounded result. Minus sign also counts as a character
+    let roundedLength = Math.round(result).toString().length;
+    if (result < 0 && result > -0.5) {
+        roundedLength += 1;
+    }
+    //Check the total length of the result. Minus sign and decimal point also count as characters
+    let totalLength = result.toString().length;
+    //Check if the rounded result can be displayed. If too long, display "Error"
+    if (roundedLength > maxNumLen) {
+        display.textContent = "Error";
         return;
     }
-    updateDisplay(firstNum, secondNum, operator,result);
+    //Rounding the result to fit the display
+    else if (totalLength > maxNumLen) {
+        let absResult = Math.abs(result);
+        const beforeDecimal = Math.floor(absResult);
+        let afterDecimal = absResult - beforeDecimal;
+        afterDecimal = Math.round(afterDecimal * Math.pow(10,(maxNumLen - (roundedLength + 1)))) / Math.pow(10,(maxNumLen - (roundedLength + 1)));
+        if (result < 0) {
+            result = beforeDecimal + afterDecimal;
+            result *= -1;
+        }
+        else {
+            result = beforeDecimal + afterDecimal;
+        }
+    }
+    display.textContent = result;
 }
 
 
@@ -61,20 +86,20 @@ function multiply(firstNum, secondNum) {
 }
 
 function divide(firstNum, secondNum) {
-    if (secondNum === 0) {
-        result = undefined;
-        result = "Infinite";
-        return;
+    if (secondNum == 0) {
+        result = "Error";
     }
-    result = Number(firstNum) / Number(secondNum);
+    else {
+        result = Number(firstNum) / Number(secondNum);
+    }    
 }
 
 function clear() {
     display.textContent = "";
-    firstNum = undefined;
-    secondNum = undefined;
-    operator = undefined;
-    result = undefined;
+    firstNum = "";
+    secondNum = "";
+    operator = "";
+    result = "";
 }
 
 const numbers = document.querySelectorAll(".numbers");
@@ -82,27 +107,17 @@ const numbers = document.querySelectorAll(".numbers");
 numbers.forEach((button) => {
     // and for each one we add a 'click' listener
     button.addEventListener("click", () => {
-        if (result !== undefined) {
-            result = undefined;
+        if (isNaN(display.textContent)) {
+            display.textContent = "";
+        }
+        else if (result !== "") {
+            result = "";
             display.textContent = "";
         }
         if (display.textContent.length >= maxNumLen) {
             return;
         }
-
-        if (firstNum !== undefined) {
-           if (secondNum === undefined) {
-            secondNum = "";
-            secondNum += button.textContent;
-           }
-           else {
-            secondNum += button.textContent;
-           }
-           updateDisplay(firstNum, secondNum, operator,result);
-           return;
-        }
-        display.textContent += button.textContent;
-        
+        display.textContent += button.textContent;        
     });
   });
 
@@ -111,34 +126,17 @@ const operators = document.querySelectorAll(".operators");
 operators.forEach((button) => {
     // and for each one we add a 'click' listener
     button.addEventListener("click", () => {
-        if (result !== undefined) {
-            firstNum = result;
-            result = undefined;
-        }
         if (display.textContent === "") {
-            if (firstNum === undefined) {
-                alert("Enter the first number");
-                return;
-            }
+            alert("Enter the first number");
+            return;
+        }
+        if (firstNum !== "") {
             operator = button.textContent;
-            return;    
         }
-        if (firstNum === undefined) {
+        else {
             firstNum = display.textContent;
-        }
-        operator = button.textContent;
-        updateDisplay(firstNum, secondNum, operator,result);
+            operator = button.textContent;
+        }        
+        display.textContent = button.textContent;
     });
   });
-
-  function updateDisplay(firstNum, secondNum, operator, result) {
-    if (operator !== undefined) {
-        display.textContent = `${firstNum}${operator}`;
-    }
-    if (secondNum !== undefined) {
-        display.textContent = `${firstNum}${operator}${secondNum}`;
-    }
-    if (result !== undefined) {
-        display.textContent = `${firstNum}${operator}${secondNum}=${result}`;
-    }
-  }
