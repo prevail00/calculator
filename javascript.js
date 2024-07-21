@@ -76,7 +76,7 @@ function operate(operator, firstNum, secondNum) {
 }
 
 function roundToFit(number) {
-    let roundedLength = Math.round(number).toString().length;
+    let roundedLength = Math.round(Number(number)).toString().length;
     console.log(`roundedLength = ${roundedLength}`);
     if (number < 0 && number > -0.5) {
         roundedLength += 1;
@@ -94,21 +94,22 @@ function roundToFit(number) {
     else if (totalLength > maxNumLen) {
         number = Number(number).toFixed(maxNumLen - (roundedLength + 1));
     }
+    number *= 1; //This is to remove trailing zeros that may arise
     console.log(`rounded = ${number}`);
     return number;
 }
 
 
 function add(firstNum, secondNum) {
-    result = Number(firstNum) + Number(secondNum);
+    result = (Number(firstNum)*10 + Number(secondNum)*10)/10; //Floating point arithmetic is not accurate, it helps to multiply and divide.
 }
 
 function subtract(firstNum, secondNum) {
-    result = Number(firstNum) - Number(secondNum);
+    result = (Number(firstNum)*10 - Number(secondNum)*10)/10; //Floating point arithmetic is not accurate, it helps to multiply and divide.
 }
 
 function multiply(firstNum, secondNum) {
-    result = Number(firstNum) * Number(secondNum);
+    result = (Number(firstNum)*10 * Number(secondNum)*10)/100; //Floating point arithmetic is not accurate, it helps to multiply and divide.
 }
 
 function divide(firstNum, secondNum) {
