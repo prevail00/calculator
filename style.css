@@ -15,12 +15,12 @@ body {
     box-sizing: border-box;
     background-color: rgb(28, 172, 172);
     padding-right: 15px;
-    height: 130px;
+    height: 150px;
     width: 750px;
     flex-shrink: 0;
     text-align: right;
     align-content: end;
-    font-size: 92px;
+    font-size: 110px;
     border-bottom: 10px solid black;
 }
 
@@ -44,4 +44,12 @@ body {
 
 button {
     font-family: 'Courier New', monospace;
+}
+
+.operators {
+    background-color: rgb(178, 201, 202);
+}
+
+.operators:hover {
+    background-color: rgb(136, 155, 156);
 }
