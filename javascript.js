@@ -52,13 +52,17 @@ function operate(operator, firstNum, secondNum) {
     else {
         return;
     }
+    console.log(`result before rounding = ${result}`);
+    /*
     //Get the length of the rounded result. Minus sign also counts as a character
     let roundedLength = Math.round(result).toString().length;
+    console.log(`roundedLength = ${roundedLength}`);
     if (result < 0 && result > -0.5) {
         roundedLength += 1;
     }
     //Check the total length of the result. Minus sign and decimal point also count as characters
     let totalLength = result.toString().length;
+    console.log(`totalLength = ${totalLength}`);
     //Check if the rounded result can be displayed. If too long, display "Error"
     if (roundedLength > maxNumLen) {
         display.textContent = "Error";
@@ -66,20 +70,32 @@ function operate(operator, firstNum, secondNum) {
     }
     //Rounding the result to fit the display
     else if (totalLength > maxNumLen) {
-        let absResult = Math.abs(result);
-        const beforeDecimal = Math.floor(absResult);
-        let afterDecimal = absResult - beforeDecimal;
-        afterDecimal = Math.round(afterDecimal * Math.pow(10,(maxNumLen - (roundedLength + 1)))) / Math.pow(10,(maxNumLen - (roundedLength + 1)));
-        if (result < 0) {
-            result = beforeDecimal + afterDecimal;
-            result *= -1;
-        }
-        else {
-            result = beforeDecimal + afterDecimal;
-        }
+        result = Number(result).toFixed(maxNumLen - (roundedLength + 1));
+    }*/
+    display.textContent = roundToFit(result);
+}
+
+function roundToFit(number) {
+    let roundedLength = Math.round(number).toString().length;
+    console.log(`roundedLength = ${roundedLength}`);
+    if (number < 0 && number > -0.5) {
+        roundedLength += 1;
     }
-    console.log(`result = ${result}`);
-    display.textContent = result;
+    //Check the total length of the number. Minus sign and decimal point also count as characters
+    let totalLength = number.toString().length;
+    console.log(`totalLength = ${totalLength}`);
+    //Check if the rounded result can be displayed. If too long, display "Error"
+    if (roundedLength > maxNumLen) {
+        number = "Error";
+        console.log(number);
+        return number;
+    }
+    //Rounding the result to fit the display
+    else if (totalLength > maxNumLen) {
+        number = Number(number).toFixed(maxNumLen - (roundedLength + 1));
+    }
+    console.log(`rounded = ${number}`);
+    return number;
 }
 
 
@@ -180,7 +196,7 @@ decimalPoint.addEventListener("click", () => {
         display.textContent = "0.";
         result = "";
     }
-    else if (display.textContent.includes(".") || isNaN(display.textContent)) {
+    else if (display.textContent.includes(".") || isNaN(display.textContent) || display.textContent.length >= (maxNumLen - 1)) {
         return;
     }
     else {
@@ -196,7 +212,7 @@ sign.addEventListener("click", () => {
         return;
     }
     if (Number(display.textContent) > 0) {
-        display.textContent = "-" + display.textContent;
+        display.textContent = roundToFit("-" + display.textContent);
     }
     else {
         display.textContent = Math.abs(Number(display.textContent));
@@ -212,11 +228,17 @@ sign.addEventListener("click", () => {
     console.log(`calcState = ${calcState}`);
 });
 
-/*const backspace = document.querySelector("#backspace");
+const backspace = document.querySelector("#backspace");
 
 backspace.addEventListener("click", () => {
-    if (display.textContent === "") {
-        return;
+    if (calcState == 1 || calcState == 3) {
+        if (display.textContent === "") {
+            return;
+        }
+        display.textContent = display.textContent.slice(0, -1);
+        if (display.textContent === "") {
+            calcState -= 1;
+        }
     }
-    display.textContent = display.textContent.slice(0, -1); 
-});*/
+    console.log(`calcState = ${calcState}`);
+});
