@@ -76,7 +76,13 @@ function operate(operator, firstNum, secondNum) {
 }
 
 function roundToFit(number) {
-    let roundedLength = Math.round(Number(number)).toString().length;
+    //Do nothing if the display content is not a number eg. Error
+    if (isNaN(number)) {
+        return number;
+    }    
+    //Check the length of the number before the decimal point
+    let roundedLength = Math.round(number).toString().length;
+    //Rounding numbers between 0 and -0,5 will remove the negative sign
     console.log(`roundedLength = ${roundedLength}`);
     if (number < 0 && number > -0.5) {
         roundedLength += 1;
