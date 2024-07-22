@@ -7,16 +7,19 @@ const maxNumLen = 11;
 
 const display = document.querySelector("#display");
 
+function clear() {
+    display.textContent = "";
+    firstNum = "";
+    secondNum = "";
+    operator = "";
+    result = "";
+    calcState = 0;
+    console.log(`calcState = ${calcState}`)
+}
 const del = document.querySelector("#del");
-del.addEventListener("click", () => {
-    clear();
-    console.log(`calcState = ${calcState}`);
-});
+del.addEventListener("click", clear);
 
-
-const equal = document.querySelector("#equal-sign");
-
-equal.addEventListener("click", () => {
+function equalsTo() {
     if (calcState < 2) {
         return;
     }
@@ -31,7 +34,9 @@ equal.addEventListener("click", () => {
     operator = "";
     calcState = 1;
     console.log(`calcState = ${calcState}`);
-});
+}
+const equal = document.querySelector("#equal-sign");
+equal.addEventListener("click", equalsTo);
 
 function operate(operator, firstNum, secondNum) {
     console.log(`firstNum = ${firstNum}`);
@@ -53,25 +58,6 @@ function operate(operator, firstNum, secondNum) {
         return;
     }
     console.log(`result before rounding = ${result}`);
-    /*
-    //Get the length of the rounded result. Minus sign also counts as a character
-    let roundedLength = Math.round(result).toString().length;
-    console.log(`roundedLength = ${roundedLength}`);
-    if (result < 0 && result > -0.5) {
-        roundedLength += 1;
-    }
-    //Check the total length of the result. Minus sign and decimal point also count as characters
-    let totalLength = result.toString().length;
-    console.log(`totalLength = ${totalLength}`);
-    //Check if the rounded result can be displayed. If too long, display "Error"
-    if (roundedLength > maxNumLen) {
-        display.textContent = "Error";
-        return;
-    }
-    //Rounding the result to fit the display
-    else if (totalLength > maxNumLen) {
-        result = Number(result).toFixed(maxNumLen - (roundedLength + 1));
-    }*/
     display.textContent = roundToFit(result);
 }
 
@@ -109,15 +95,12 @@ function roundToFit(number) {
 function add(firstNum, secondNum) {
     result = (Number(firstNum)*10 + Number(secondNum)*10)/10; //Floating point arithmetic is not accurate, it helps to multiply and divide.
 }
-
 function subtract(firstNum, secondNum) {
     result = (Number(firstNum)*10 - Number(secondNum)*10)/10; //Floating point arithmetic is not accurate, it helps to multiply and divide.
 }
-
 function multiply(firstNum, secondNum) {
     result = (Number(firstNum)*10 * Number(secondNum)*10)/100; //Floating point arithmetic is not accurate, it helps to multiply and divide.
 }
-
 function divide(firstNum, secondNum) {
     if (secondNum == 0) {
         result = "Error";
@@ -127,78 +110,69 @@ function divide(firstNum, secondNum) {
     }    
 }
 
-function clear() {
-    display.textContent = "";
-    firstNum = "";
-    secondNum = "";
-    operator = "";
-    result = "";
-    calcState = 0;
+function numInput(input) {
+    if (calcState < 1) {
+        calcState = 1;
+    }
+    else if (calcState == 1 && result !== "") {
+        result = "";
+        display.textContent = "";
+    }
+    else if (calcState == 2) {
+        calcState = 3;
+    }
+    if (isNaN(display.textContent)) {
+        display.textContent = "";
+    }
+    if (display.textContent.length >= maxNumLen) {
+        return;
+    }
+    if (display.textContent === "0") {
+        if (input === "0") {
+            return;
+        }
+        else if (result === "") {
+            display.textContent += ".";
+        }
+        else {
+            display.textContent = "";
+        }
+    }
+    display.textContent += input;
+    console.log(`calcState = ${calcState}`);
 }
-
 const numbers = document.querySelectorAll(".numbers");
 // we use the .forEach method to iterate through each num button
 numbers.forEach((button) => {
     // and for each one we add a 'click' listener
-    button.addEventListener("click", () => {
-        if (calcState < 1) {
-            calcState = 1;
-        }
-        else if (calcState == 1 && result !== "") {
-            result = "";
-            display.textContent = "";
-        }
-        else if (calcState == 2) {
-            calcState = 3;
-        }
-        if (isNaN(display.textContent)) {
-            display.textContent = "";
-        }
-        if (display.textContent.length >= maxNumLen) {
-            return;
-        }
-        if (display.textContent === "0") {
-            if (button.textContent === "0") {
-                return;
-            }
-            else if (result === "") {
-                display.textContent += ".";
-            }
-            else {
-                display.textContent = "";
-            }
-        }
-        display.textContent += button.textContent;
-        console.log(`calcState = ${calcState}`);
-    });
-  });
+    button.addEventListener("click", () => numInput(button.textContent));
+});
 
+function operatorInput(input) {
+    if (calcState < 1 || display.textContent === "Error") {
+        alert("Enter the first number");
+        return;
+    }
+    else if (calcState == 1)  {
+        firstNum = display.textContent;
+        operator = input;
+        display.textContent = input;
+        calcState = 2;
+    }
+    else if (calcState == 2) {
+        operator = input;
+        display.textContent = input;            
+    }
+    console.log(`calcState = ${calcState}`);
+}
 const operators = document.querySelectorAll(".operators");
 // we use the .forEach method to iterate through each operator button
 operators.forEach((button) => {
     // and for each one we add a 'click' listener
-    button.addEventListener("click", () => {
-        if (calcState < 1 || display.textContent === "Error") {
-            alert("Enter the first number");
-            return;
-        }
-        else if (calcState == 1)  {
-            firstNum = display.textContent;
-            operator = button.textContent;
-            display.textContent = button.textContent;
-            calcState = 2;
-        }
-        else if (calcState == 2) {
-            operator = button.textContent;
-            display.textContent = button.textContent;            
-        }
-        console.log(`calcState = ${calcState}`);
-    });
-  });
+    button.addEventListener("click", () => operatorInput(button.textContent));
+});
 
-const decimalPoint = document.querySelector("#decimal-point");
-
-decimalPoint.addEventListener("click", () => {
+function addDecPoint(input) {
     if (display.textContent === "" || result !== "") {
         display.textContent = "0.";
         result = "";
@@ -207,13 +181,14 @@ decimalPoint.addEventListener("click", () => {
         return;
     }
     else {
-        display.textContent += decimalPoint.textContent;
+        display.textContent += input;
     }
     console.log(`calcState = ${calcState}`);
-});
+}
+const decimalPoint = document.querySelector("#decimal-point");
+decimalPoint.addEventListener("click", () => addDecPoint(decimalPoint.textContent));
 
 const sign = document.querySelector("#change-sign");
-
 sign.addEventListener("click", () => {
     if (isNaN(display.textContent) || display.textContent === "") {
         return;
@@ -235,11 +210,10 @@ sign.addEventListener("click", () => {
     console.log(`calcState = ${calcState}`);
 });
 
-const backspace = document.querySelector("#backspace");
 
-backspace.addEventListener("click", () => {
+function backspace() {
     if (calcState == 1 || calcState == 3) {
-        if (display.textContent === "") {
+        if (display.textContent === "" || display.textContent === "Error") {
             return;
         }
         display.textContent = display.textContent.slice(0, -1);
@@ -248,4 +222,56 @@ backspace.addEventListener("click", () => {
         }
     }
     console.log(`calcState = ${calcState}`);
-});
+}
+const backspaceBtn = document.querySelector("#backspace");
+backspaceBtn.addEventListener("click", backspace);
+
+//Handle input from keyboard
+window.addEventListener(
+    "keydown",
+    (event) => {
+      if (event.defaultPrevented) {
+        return; // Do nothing if the event was already processed
+      }
+  
+      switch (event.key) {
+        case "Backspace":
+            backspace();
+            break;
+        case "+":
+        case "-":
+        case "*":
+        case "/":
+            operatorInput(event.key);
+            break;
+        case "0":
+        case "1":
+        case "2":
+        case "3":
+        case "4":
+        case "5":
+        case "6":
+        case "7":
+        case "8":
+        case "9":
+            numInput(event.key);
+            break;
+        case "Delete":
+          clear();
+          break;
+        case "Enter":
+          equalsTo();6
+          break;
+        case ".":
+        case ",":
+          addDecPoint(event.key);
+          break;
+        default:
+          return; // Quit when this doesn't handle the key event.
+      }
+  
+      // Cancel the default action to avoid it being handled twice
+      event.preventDefault();
+    },
+    true,
+  );
