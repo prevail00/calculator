@@ -172,7 +172,7 @@ operators.forEach((button) => {
     button.addEventListener("click", () => operatorInput(button.textContent));
 });
 
-function addDecPoint(input) {
+function addDecPoint() {
     if (display.textContent === "" || result !== "") {
         display.textContent = "0.";
         result = "";
@@ -181,12 +181,12 @@ function addDecPoint(input) {
         return;
     }
     else {
-        display.textContent += input;
+        display.textContent += ".";
     }
     console.log(`calcState = ${calcState}`);
 }
 const decimalPoint = document.querySelector("#decimal-point");
-decimalPoint.addEventListener("click", () => addDecPoint(decimalPoint.textContent));
+decimalPoint.addEventListener("click", addDecPoint);
 
 const sign = document.querySelector("#change-sign");
 sign.addEventListener("click", () => {
@@ -264,7 +264,7 @@ window.addEventListener(
           break;
         case ".":
         case ",":
-          addDecPoint(event.key);
+          addDecPoint();
           break;
         default:
           return; // Quit when this doesn't handle the key event.
